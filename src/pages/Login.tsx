@@ -1,8 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const formData = new URLSearchParams();
+    formData.append('Email', email);
+    formData.append('Password', password);
+    formData.append('RememberMe', 'false');
+
+    try {
+      const response: any = await fetch(
+        'https://localhost:44355/Account/Login',
+        {
+          method: 'POST',
+          headers: {
+            Accept:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Origin: 'https://localhost:44355',
+            Referer: 'https://localhost:44355/Account/Login',
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+          },
+          body: formData.toString(),
+        }
+      );
+
+      if (response.ok) {
+        navigate('dashboard');
+      } else {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
+
   return (
     <div className="w-full lg:grid lg:min-h-[100vh] lg:grid-cols-2 xl:min-h-[100vh]">
       <div className="flex items-center justify-center py-12">
@@ -20,7 +63,7 @@ export function LoginPage() {
               Enter your email below to login to your account
             </p>
           </div>
-          <div className="grid gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -28,25 +71,29 @@ export function LoginPage() {
                 type="email"
                 placeholder="m@example.com"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                {/* <Link
-                  to="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
+                <Link to="/" className="ml-auto inline-block text-sm underline">
                   Forgot your password?
-                </Link> */}
+                </Link>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-            <Link to="/dashboard">Login</Link>
-            {/* <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full">
               Login
-            </Button> */}
-          </div>
+            </Button>
+          </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
             <Link to="/signup" className="underline">

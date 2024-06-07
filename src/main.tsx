@@ -1,5 +1,4 @@
 import { DashboardPage } from '@/pages/Dashboard';
-import { HomePage } from '@/pages/Home.tsx';
 import { LoginPage } from '@/pages/Login.tsx';
 import { NotFoundPage } from '@/pages/NotFound';
 import { SignUpPage } from '@/pages/SignUp';
@@ -16,8 +15,7 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route index element={<HomePage />} errorElement={<NotFoundPage />} />
-      <Route path="login" element={<LoginPage />} />
+      <Route index element={<LoginPage />} errorElement={<NotFoundPage />} />
       <Route path="signup" element={<SignUpPage />} />
       <Route path="dashboard" element={<DashboardPage />} />
     </>

@@ -1,17 +1,7 @@
-import {
-  Activity,
-  ArrowUpRight,
-  CreditCard,
-  DollarSign,
-  Link,
-  Menu,
-  Package2,
-  Search,
-  Users,
-} from 'lucide-react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link, Menu, Package2, Search } from 'lucide-react';
 
 import { Overview } from '@/components/overview';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -24,55 +14,184 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useEffect, useState } from 'react';
+
+const FALLBACK_DATA_TEMPERATURES = [
+  {
+    name: 'Jan',
+    total: 21,
+  },
+  {
+    name: 'Feb',
+    total: 22,
+  },
+  {
+    name: 'Mar',
+    total: 20,
+  },
+  {
+    name: 'Apr',
+    total: 23,
+  },
+  {
+    name: 'May',
+    total: 24,
+  },
+  {
+    name: 'Jun',
+    total: 26,
+  },
+  {
+    name: 'Jul',
+    total: 28,
+  },
+  {
+    name: 'Aug',
+    total: 30,
+  },
+  {
+    name: 'Sep',
+    total: 24,
+  },
+  {
+    name: 'Oct',
+    total: 23,
+  },
+  {
+    name: 'Nov',
+    total: 25,
+  },
+  {
+    name: 'Dec',
+    total: 22,
+  },
+];
+
+const FALLBACK_DATA_POLLUTION = [
+  {
+    name: 'Jan',
+    total: 1,
+  },
+  {
+    name: 'Feb',
+    total: 3,
+  },
+  {
+    name: 'Mar',
+    total: 4,
+  },
+  {
+    name: 'Apr',
+    total: 3,
+  },
+  {
+    name: 'May',
+    total: 5,
+  },
+  {
+    name: 'Jun',
+    total: 8,
+  },
+  {
+    name: 'Jul',
+    total: 6,
+  },
+  {
+    name: 'Aug',
+    total: 4,
+  },
+  {
+    name: 'Sep',
+    total: 9,
+  },
+  {
+    name: 'Oct',
+    total: 10,
+  },
+  {
+    name: 'Nov',
+    total: 11,
+  },
+  {
+    name: 'Dec',
+    total: 15,
+  },
+];
 
 export function DashboardPage() {
+  const [dataTemperatures, setDataTemperatures] = useState(
+    FALLBACK_DATA_TEMPERATURES
+  );
+  const [dataPollution, setDataPollution] = useState(FALLBACK_DATA_POLLUTION);
+
+  useEffect(() => {
+    const fetchTemperatures = async () => {
+      try {
+        const response: any = await fetch(
+          'https://localhost:44355/SeaTemperatures',
+          {
+            headers: {
+              accept: 'application/json',
+              'cache-control': 'no-cache',
+              pragma: 'no-cache',
+              'user-agent': 'Mozilla/5.0',
+            },
+          }
+        );
+
+        if (response.data) {
+          setDataTemperatures(response.data);
+        }
+      } catch (error) {
+        console.error(
+          'Failed to fetch sea temperatures, using fallback data:',
+          error
+        );
+      }
+    };
+
+    const fetchPollution = async () => {
+      try {
+        const response: any = await fetch(
+          'https://localhost:44355/SeaPollutions',
+          {
+            headers: {
+              accept: 'application/json',
+              'cache-control': 'no-cache',
+              pragma: 'no-cache',
+              'user-agent': 'Mozilla/5.0',
+            },
+          }
+        );
+
+        if (response.data) {
+          setDataPollution(response);
+        }
+      } catch (error) {
+        console.error(
+          'Failed to fetch sea pollution data, using fallback data:',
+          error
+        );
+      }
+    };
+
+    fetchTemperatures();
+    fetchPollution();
+  }, []);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-          <Link
-            href="#"
-            className="flex items-center gap-2 text-lg font-semibold md:text-base"
-          >
-            <Package2 className="h-6 w-6" />
-            <span className="sr-only">Sea Health</span>
-          </Link>
-          <Link
-            href="#"
-            className="text-foreground transition-colors hover:text-foreground"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Orders
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Customers
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Analytics
-          </Link>
+          <img
+            src="./src/assets/lighthouse.svg"
+            alt=""
+            className="w-10 object-cover"
+          />
         </nav>
         <Sheet>
           <SheetTrigger asChild>
@@ -92,34 +211,7 @@ export function DashboardPage() {
                 className="flex items-center gap-2 text-lg font-semibold"
               >
                 <Package2 className="h-6 w-6" />
-                <span className="sr-only">Acme Inc</span>
-              </Link>
-              <Link href="#" className="hover:text-foreground">
-                Dashboard
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Orders
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Products
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Customers
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Analytics
+                <span className="sr-only">Sea Health</span>
               </Link>
             </nav>
           </SheetContent>
@@ -130,7 +222,6 @@ export function DashboardPage() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search products..."
                 className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
               />
             </div>
@@ -138,176 +229,43 @@ export function DashboardPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
-                {/* <CircleUser className="h-5 w-5" /> */}
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="dashboard-01-chunk-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Revenue
-              </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Subscriptions
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-2">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
-            </CardContent>
-          </Card>
-        </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+          <Card
+            className="xl:col-span-2 bg-muted"
+            x-chunk="dashboard-01-chunk-4"
+          >
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
-                <CardTitle>Transactions</CardTitle>
-                <CardDescription>
-                  Recent transactions from your store.
-                </CardDescription>
+                <CardTitle>Sea Temperature</CardTitle>
+                <CardDescription>Pacific Ocean</CardDescription>
               </div>
-              <Button asChild size="sm" className="ml-auto gap-1">
-                <Link href="#">
-                  View All
-                  <ArrowUpRight className="h-4 w-4" />
-                </Link>
-              </Button>
             </CardHeader>
             <CardContent>
-              <Overview />
+              <Overview data={dataTemperatures} />
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-5">
-            <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
+          <Card
+            className="xl:col-span-2 bg-muted"
+            x-chunk="dashboard-01-chunk-4"
+          >
+            <CardHeader className="flex flex-row items-center">
+              <div className="grid gap-2">
+                <CardTitle>Sea Pollution</CardTitle>
+                <CardDescription>Indic Ocean</CardDescription>
+              </div>
             </CardHeader>
-            <CardContent className="grid gap-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                  <AvatarFallback>OM</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Olivia Martin
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    olivia.martin@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$1,999.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Jackson Lee
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    jackson.lee@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
-                  <AvatarFallback>IN</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Isabella Nguyen
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    isabella.nguyen@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$299.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                  <AvatarFallback>WK</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    William Kim
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    will@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$99.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
-                  <AvatarFallback>SD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Sofia Davis
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    sofia.davis@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
+            <CardContent>
+              <Overview data={dataPollution} />
             </CardContent>
           </Card>
         </div>
