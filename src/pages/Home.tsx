@@ -1,8 +1,8 @@
 import ReactSVG from '@/assets/react.svg';
 import CountBtn from '@/components/CountBtn';
-import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
-function App() {
+export function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <div className="flex flex-col items-center gap-y-4">
@@ -11,17 +11,9 @@ function App() {
           <span className="text-6xl">+</span>
           <img src={'/vite.svg'} alt="Vite Logo" className="w-32" />
         </div>
-        <a
-          href="https://ui.shadcn.com"
-          rel="noopener noreferrer nofollow"
-          target="_blank"
-        >
-          <Badge variant="outline">shadcn/ui</Badge>
-        </a>
         <CountBtn />
+        <Link to="/login">Login</Link>
       </div>
     </main>
   );
 }
-
-export default App;

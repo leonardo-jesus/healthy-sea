@@ -1,10 +1,31 @@
+import { DashboardPage } from '@/pages/Dashboard';
+import { HomePage } from '@/pages/Home.tsx';
+import { LoginPage } from '@/pages/Login.tsx';
+import { NotFoundPage } from '@/pages/NotFound';
+import { SignUpPage } from '@/pages/SignUp';
 import '@/styles/globals.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route index element={<HomePage />} errorElement={<NotFoundPage />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route path="signup" element={<SignUpPage />} />
+      <Route path="dashboard" element={<DashboardPage />} />
+    </>
+  )
+);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
